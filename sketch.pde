@@ -32,7 +32,12 @@ StormClouds stormClouds;
 StormClouds stormClouds2;
 
 void render() {
-
+	push();
+	translate(0,0,de*0.5);
+	fill(65,75,55,255);
+	rotateX(PI/2);
+	rect(0,0,de*3.3,de*3);
+	pop();
 }
 
 void addEvents() {
@@ -50,7 +55,7 @@ void setSketch() {
 	front = new PVector(de*mult,de*mult,de*mult);
   	back = new PVector(-de*mult,-de*mult,-de*mult);
 
-  	mountainRange = new MountainRange(new PVector(0,0,0), new PVector(de*1.3,de*0.5,de*0.3));
+  	mountainRange = new MountainRange(new PVector(0,0,back.z), new PVector(de*1.6,de*0.5,de*0.3));
   	mountainRange.addPeaks(12, 0, 0.31,0.55, 0.7,1, 0.3,1);
   	mountainRange.addPeaks(16, 0.5, 0.21,0.35, 0.3,0.7, 0.2,0.4);
   	mountainRange.addPeaks(28, 1, 0.1,0.15, 0.2,0.5, 0.1,0.3);
@@ -58,11 +63,11 @@ void setSketch() {
 
   	float dex = (front.x - back.x)*0.6;
 
-  	stormClouds = new StormClouds(new PVector(0,-de*0.8,de*0.5), dex,de*0.15,dex);
-  	stormClouds.addClouds(90, 0.15,0.25,125);
+  	stormClouds = new StormClouds(new PVector(0,-de*1.05,de*0.5), dex,de*0.15,dex);
+  	stormClouds.addClouds(110, 0.15,0.25,125);
   	mobs.add(stormClouds);
 
-  	stormClouds2 = new StormClouds(new PVector(0,-de*1.01,de*0.5), dex,de*0.1,dex);
-  	stormClouds2.addClouds(150, 0.05,0.25,175);
+  	stormClouds2 = new StormClouds(new PVector(0,-de*1.25,de*0.5), dex,de*0.1,dex);
+  	stormClouds2.addClouds(180, 0.05,0.25,175);
   	mobs.add(stormClouds2);
 }

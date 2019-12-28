@@ -280,6 +280,18 @@ class Point {
     P.set(X,Y,Z);
     v.set(0,0,0);
   }
+
+  void reset(PVector other) {
+  	p.set(other.x,other.y,other.z);
+  	P.set(other.x,other.y,other.z);
+    v.set(0,0,0);
+  }
+
+  void reset(Point other) {
+  	p.set(other.p.x,other.p.y,other.p.z);
+  	P.set(other.P.x,other.P.y,other.P.z);
+    v.set(other.v.x, other.v.y, other.v.z);
+  }
 }
 
 class SpringValue {
@@ -529,13 +541,17 @@ class Camera {
   PVector dang;
   boolean lock = true;
 
-  Camera(float x, float y, float z) {
+  Camera(float x, float y, float z, float ax, float ay, float az) {
     this.p = new Point(x, y, z);
     this.dp = this.p.p.copy();
-    this.ang = new Point();
-    this.dang = new PVector();
+    this.ang = new Point(ax, ay, az);
+    this.dang = new PVector(ax, ay, az);
     this.ang.mass = 10;
     this.ang.vMult = 0.5;
+  }
+
+  Camera(float x, float y, float z) {
+  	this(x,y,z,0,0,0);
   }
 
   void update() {

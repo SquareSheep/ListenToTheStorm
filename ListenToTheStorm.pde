@@ -35,8 +35,7 @@ void setup() {
   de = (int)(min(width,height)*1);
   aw = (int)(4*de);
 
-  cam = new Camera(de*0.5,de*0.88,-de*1.2);
-  cam.ang.P.set(0.26,0,0);
+  cam = new Camera(de*0.5,de*0.88,-de*1.2, -0.05,0,0);
 
   textSize(de/10);
 
