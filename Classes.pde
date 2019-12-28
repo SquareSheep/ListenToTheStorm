@@ -20,7 +20,7 @@ class Event {
   void end() {}
 }
 
-abstract class ObjectPool<T extends Entity> {
+abstract class ObjectPool<T extends Entity> extends Entity {
   int arm;
   ArrayList<T> ar;
 
@@ -133,6 +133,11 @@ class Panel extends MobF {
   }
 }
 
+abstract class MobFL extends Mob {
+	IColor[] fillStyle;
+	IColor[] strokeStyle;
+}
+
 abstract class MobF extends Mob {
   IColor fillStyle = defaultFill.copy();
   IColor strokeStyle = defaultStroke.copy();
@@ -234,6 +239,10 @@ class Point {
 
   Point(PVector p) {
     this(p, defaultVMult, defaultMass);
+  }
+
+  Point(Point p) {
+  	this(p.p, p.vMult, p.mass);
   }
 
   Point(float x, float y, float z) {
@@ -437,6 +446,10 @@ class IColor extends AColor {
     set(rc,gc,bc,ac,rm,gm,bm,am,index);
     r.x = rc; g.x = gc; b.x = bc; a.x = ac;
   }
+
+  void reset(float rc, float gc, float bc, float ac) {
+  	reset(rc,gc,bc,ac, 0,0,0,0,-1);
+  }
 }
 
 class AColor {
@@ -469,8 +482,16 @@ class AColor {
     fill(r.x, g.x, b.x, a.x);
   }
 
+  void fillStyle(float rc, float gc, float bc, float ac) {
+  	fill(r.x + rc, g.x + gc, b.x + bc, a.x + ac);
+  }
+
   void strokeStyle() {
     stroke(r.x, g.x, b.x, a.x);
+  }
+
+  void strokeStyle(float rc, float gc, float bc, float ac) {
+  	stroke(r.x + rc, g.x + gc, b.x + bc, a.x + ac);
   }
 
   void setx(float r, float g, float b, float a) {

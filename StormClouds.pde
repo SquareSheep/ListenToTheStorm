@@ -1,13 +1,13 @@
+Point rainVel = new Point(1,12,1);
+float rainAmp = 600;
+int cloudBoudaryLifeSpan = 300;
+float cloudRepelAmp = 0.01;
+
 class StormClouds extends Entity {
 	ArrayList<Cloud> ar;
 	PVector w;
 	Point p;
 	RainPool rain = new RainPool();
-
-	Point rainVel = new Point(1,12,1);
-	float rainAmp = 600;
-	int cloudBoudaryLifeSpan = 300;
-	float cloudRepelAmp = 0.01;
 
 	StormClouds(PVector p, float wx, float wy, float wz) {
 		this.ar = new ArrayList<Cloud>();
@@ -21,6 +21,10 @@ class StormClouds extends Entity {
 		rain.update();
 		for (int i = 0 ; i < ar.size() ; i ++) {
 			Cloud mob = ar.get(i);
+			if ((frameCount + mob.tick) % (int)(rainAmp/(avg+1)) < 2) {
+				rain.add(mob.p.p.x+random(-mob.w.p.x,mob.w.p.x), mob.p.p.y+random(-mob.w.p.y,mob.w.p.y), 
+					mob.p.p.z+random(-mob.w.p.z,mob.w.p.z),  mob.rainV.p.x, mob.rainV.p.y + avg, mob.rainV.p.z);
+			}
 			if (mob.lifeSpan != -1) {
 				mob.lifeSpan --;
 				if (mob.lifeSpan == 0) {
@@ -80,91 +84,112 @@ class StormClouds extends Entity {
 		}
 	}
 
-	class Cloud extends Mob {
-		Point w;
-		PVector wd;
-		IColor fillStyle;
-		int tick = (int)random(15,1000);
-		Point rainV = rainVel.copy();
-
-		Cloud(PVector p, PVector w, float r, float g, float b) {
-			this.p = new Point(p);
-			this.w = new Point(w);
-			this.wd = w.copy();
-			this.p.mass = 300;
-			this.p.vMult = 0.1;
-			this.w.mass = 250;
-			this.w.vMult = 0.4;
-			this.ang.mass = 600;
-			this.ang.vMult = 0.1;
-			this.ang.reset(random(-PI,PI),random(-PI,PI),random(-PI,PI));
-			this.fillStyle = new IColor(r,g,b,255);
-		}
-
-		void update() {
-			super.update();
-			w.update();
-			fillStyle.update();
-			if ((frameCount + tick) % 60 == 0) this.rainV.P.set(rainVel.p.x,rainVel.p.y,rainVel.p.z);
-			this.rainV.update();
-			if ((frameCount + tick) % (int)(rainAmp/(avg+1)) < 2) {
-				rain.add(p.p.x+random(-w.p.x,w.p.x), p.p.y+random(-w.p.y,w.p.y), p.p.z+random(-w.p.z,w.p.z),  rainV.p.x, rainV.p.y + avg, rainV.p.z);
-			}
-		}
-
-		void render() {
-			setDraw();
-			fillStyle.fillStyle();
-			box(w.p.x,w.p.y,w.p.z);
-			pop();
+	void setCloudFillStyleM(float r, float g, float b, float a, float minI, float maxI) {
+		for (int i = 0 ; i < ar.size() ; i ++) {
+			ar.get(i).fillStyle.setM(r,g,b,a, (int)((float)i/ar.size()*binCount*(maxI-minI)+binCount*minI));
 		}
 	}
 
-	class RainPool extends ObjectPool<RainDrop> {
-
-		PVector rainW = new PVector(0.005,0.025,0.005);
-		IColor fillStyle = new IColor(125,125,255,255);
-
-		void set(RainDrop mob, float x, float y, float z, float vx, float vy, float vz) {
-			mob.p.reset(x,y,z);
-			mob.pv.reset(vx,vy,vz);
-			mob.w.reset(rainW.x*de,rainW.y*de,rainW.z*de);
-			mob.fillStyle.setC(fillStyle.rc, fillStyle.gc, fillStyle.bc, fillStyle.ac);
-			mob.fillStyle.setx(0,0,0,0);
-			mob.finished = false;
-		}
-
-		void add(float x, float y, float z, float vx, float vy, float vz) {
-			if (arm == ar.size()) {
-				ar.add(0, new RainDrop());
-				set(getLast(), x,y,z, vx,vy,vz);
-			} else {
-				set(ar.get(arm), x,y,z, vx,vy,vz);
-			}
-			arm ++;
+	void setCloudFillStyleC(float r, float g, float b, float a) {
+		for (int i = 0 ; i < ar.size() ; i ++) {
+			ar.get(i).fillStyle.setC(r,g,b,a);
 		}
 	}
 
-	class RainDrop extends Mob {
-
-		IColor fillStyle = new IColor();
-		Point w = new Point();
-
-		RainDrop() {
-			this.p = new Point();
+	void setRainFillStyleM(float r, float g, float b, float a, float minI, float maxI) {
+		for (int i = 0 ; i < rain.ar.size() ; i ++) {
+			rain.ar.get(i).fillStyle.setM(r,g,b,a, (int)((float)i/rain.ar.size()*binCount*(maxI-minI)+binCount*minI));
 		}
+	}
 
-		void update() {
-			super.update();
-			fillStyle.update();
-			if (p.p.y > de*1.5) finished = true;
+	void setRainFillStyleC(float r, float g, float b, float a) {
+		for (int i = 0 ; i < rain.ar.size() ; i ++) {
+			rain.ar.get(i).fillStyle.setC(r,g,b,a);
 		}
+	}
+}
 
-		void render() {
-			setDraw();
-			fillStyle.fillStyle();
-			box(w.p.x,w.p.y,w.p.z);
-			pop();
+class Cloud extends Mob {
+	Point w;
+	PVector wd;
+	IColor fillStyle;
+	int tick = (int)random(15,1000);
+	Point rainV = new Point(rainVel);
+
+	Cloud(PVector p, PVector w, float r, float g, float b) {
+		this.p = new Point(p);
+		this.w = new Point(w);
+		this.wd = w.copy();
+		this.p.mass = 300;
+		this.p.vMult = 0.1;
+		this.w.mass = 250;
+		this.w.vMult = 0.4;
+		this.ang.mass = 600;
+		this.ang.vMult = 0.1;
+		this.ang.reset(random(-PI,PI),random(-PI,PI),random(-PI,PI));
+		this.fillStyle = new IColor(r,g,b,255);
+	}
+
+	void update() {
+		super.update();
+		w.update();
+		fillStyle.update();
+		if ((frameCount + tick) % 60 == 0) this.rainV.P.set(rainVel.p.x,rainVel.p.y,rainVel.p.z);
+		this.rainV.update();
+	}
+
+	void render() {
+		setDraw();
+		fillStyle.fillStyle();
+		box(w.p.x,w.p.y,w.p.z);
+		pop();
+	}
+}
+
+class RainPool extends ObjectPool<RainDrop> {
+
+	PVector rainW = new PVector(0.005,0.025,0.005);
+	IColor fillStyle = new IColor(125,125,255,255);
+
+	void set(RainDrop mob, float x, float y, float z, float vx, float vy, float vz) {
+		mob.p.reset(x,y,z);
+		mob.pv.reset(vx,vy,vz);
+		mob.w.reset(rainW.x*de,rainW.y*de,rainW.z*de);
+		mob.fillStyle.setC(fillStyle.rc, fillStyle.gc, fillStyle.bc, fillStyle.ac);
+		mob.fillStyle.setx(0,0,0,0);
+		mob.finished = false;
+	}
+
+	void add(float x, float y, float z, float vx, float vy, float vz) {
+		if (arm == ar.size()) {
+			ar.add(0, new RainDrop());
+			set(getLast(), x,y,z, vx,vy,vz);
+		} else {
+			set(ar.get(arm), x,y,z, vx,vy,vz);
 		}
+		arm ++;
+	}
+}
+
+class RainDrop extends Mob {
+
+	IColor fillStyle = new IColor();
+	Point w = new Point();
+
+	RainDrop() {
+		this.p = new Point();
+	}
+
+	void update() {
+		super.update();
+		fillStyle.update();
+		if (p.p.y > de*1.5) finished = true;
+	}
+
+	void render() {
+		setDraw();
+		fillStyle.fillStyle();
+		box(w.p.x,w.p.y,w.p.z);
+		pop();
 	}
 }

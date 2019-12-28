@@ -30,6 +30,7 @@ IColor defaultStroke = new IColor(0,0,0,0, 5,5,5,5,-1);
 MountainRange mountainRange;
 StormClouds stormClouds;
 StormClouds stormClouds2;
+LightningPool lightning;
 
 void render() {
 	push();
@@ -38,10 +39,13 @@ void render() {
 	rotateX(PI/2);
 	rect(0,0,de*3.3,de*3);
 	pop();
+	if (frameCount % 60 == 0) {
+		lightning.add(0,0,0,1000,1000,1000);
+	}
 }
 
 void addEvents() {
-	
+	events.add(new Intro());
 }
 
 void keyboardInput() {
@@ -55,10 +59,13 @@ void setSketch() {
 	front = new PVector(de*mult,de*mult,de*mult);
   	back = new PVector(-de*mult,-de*mult,-de*mult);
 
+  	lightning = new LightningPool();
+  	mobs.add(lightning);
+
   	mountainRange = new MountainRange(new PVector(0,0,back.z), new PVector(de*1.6,de*0.5,de*0.3));
-  	mountainRange.addPeaks(12, 0, 0.31,0.55, 0.7,1, 0.3,1);
-  	mountainRange.addPeaks(16, 0.5, 0.21,0.35, 0.3,0.7, 0.2,0.4);
-  	mountainRange.addPeaks(28, 1, 0.1,0.15, 0.2,0.5, 0.1,0.3);
+  	mountainRange.addMountains(12, 0, 0.31,0.55, 0.7,1, 0.3,1);
+  	mountainRange.addMountains(16, 0.5, 0.21,0.35, 0.3,0.7, 0.2,0.4);
+  	mountainRange.addMountains(28, 1, 0.1,0.15, 0.2,0.5, 0.1,0.3);
   	mobs.add(mountainRange);
 
   	float dex = (front.x - back.x)*0.6;
