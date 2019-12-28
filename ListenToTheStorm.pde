@@ -68,9 +68,9 @@ void draw() {
   }
 
   // fill(255);
-  //drawBorders();
-  //drawWidthBox(de);
-  //drawPitches();
+  // drawBorders();
+  // drawWidthBox(de);
+  // drawPitches();
   // push();
   // translate(0,de*0.75,0);
   // text(currBeat + " " + (int)frameRate,0,0);

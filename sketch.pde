@@ -4,10 +4,10 @@ Listen To The Storm
 Main systems:
 
 Mountain range
-Foreground grass
-Storm clouds
-Sun + sun rays
+Storm clouds + rain
 Lightning
+Foreground grass
+Sun + sun rays
 */
 
 static float bpm = 81;
