@@ -74,13 +74,12 @@ class StormClouds extends Entity {
 
 	void addClouds(float num, float minW, float maxW) {
 		for (int i = 0 ; i < num ; i ++) {
-			float g = random(-25,25) + 100;
 			float W = random(minW*w.x,maxW*w.x);
 			float wx = W*random(0.8,1.2);
 			float wy = W*random(0.8,1.2);
 			float wz = W*random(0.8,1.2);
 			ar.add(new Cloud(new PVector(random(-w.x,w.x), random(-w.y,w.y), random(-w.z,w.z)),
-				new PVector(wx,wy,wz), g,g,g));
+				new PVector(wx,wy,wz), 0,0,0));
 		}
 	}
 
@@ -91,8 +90,11 @@ class StormClouds extends Entity {
 	}
 
 	void setCloudFillStyleC(float r, float g, float b, float a) {
+		float gr;
+		float ag = (r + g + b)/3;
 		for (int i = 0 ; i < ar.size() ; i ++) {
-			ar.get(i).fillStyle.setC(r,g,b,a);
+			gr = random(-ag*0.1,ag*0.1);
+			ar.get(i).fillStyle.setC(r+gr,g+gr,b+gr,a);
 		}
 	}
 

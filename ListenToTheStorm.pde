@@ -173,6 +173,10 @@ void mousePressed() {
 }
 
 void keyPressed() {
+	if (key == '0') {
+		mouseX = 0;
+		mousePressed();
+	}
   if (key == 'e') {
     if (!cam.lock) {
       cam.lock = true;
