@@ -18,9 +18,9 @@ static float defaultMass = 30;
 static float defaultVMult = 0.5;
 static float fillMass = 5;
 static float fillVMult = 0.5;
-static float fftThreshold = 1.5;
-static float fftPow = 1.3;
-static float fftAmp = 5;
+static float fftThreshold = 1;
+static float fftPow = 1.2;
+static float fftAmp = 2;
 static float volumeGain = -10;
 static String songName = "../Music/listentothestorm.mp3";
 
@@ -30,7 +30,6 @@ IColor defaultStroke = new IColor(0,0,0,0, 5,5,5,5,-1);
 MountainRange mountainRange;
 StormClouds stormClouds;
 StormClouds stormClouds2;
-LightningPool lightning;
 
 void render() {
 	push();
@@ -39,13 +38,15 @@ void render() {
 	rotateX(PI/2);
 	rect(0,0,de*3.3,de*3);
 	pop();
-	if (frameCount % 60 == 0) {
-		lightning.add(0,0,0,1000,1000,1000);
-	}
 }
 
 void addEvents() {
 	events.add(new Intro());
+	for (int i = 0 ; i < 10 ; i ++) {
+		events.add(new Distortion(i*9+10));
+		events.add(new Distortion(i*9+10));
+		events.add(new Distortion(i*9+10));
+	}
 }
 
 void keyboardInput() {
@@ -58,9 +59,6 @@ void setSketch() {
 	float mult = 1;
 	front = new PVector(de*mult,de*mult,de*mult);
   	back = new PVector(-de*mult,-de*mult,-de*mult);
-
-  	lightning = new LightningPool();
-  	mobs.add(lightning);
 
   	mountainRange = new MountainRange(new PVector(0,0,back.z), new PVector(de*1.6,de*0.5,de*0.3));
   	mountainRange.addMountains(12, 0, 0.31,0.55, 0.7,1, 0.3,1);

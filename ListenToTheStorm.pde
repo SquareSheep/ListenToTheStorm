@@ -101,6 +101,10 @@ void updateEvents() {
           }
           event.update();
           event.render();
+          if (currBeat == event.timeEnding && !event.ending) {
+          	event.ending = true;
+          	event.ending();
+          }
         } else if (currBeat >= event.timeEnd) {
             event.finished = true;
             event.end();
@@ -153,6 +157,12 @@ void mousePressed() {
     if (tempBeat <= event.time) {
       event.spawned = false;
       event.finished = false;
+      if (tempBeat > event.timeEnding) {
+      	event.ending();
+      	event.ending = true;
+      } else {
+      	event.ending = false;
+      }
     }
     if (currBeat >= event.time && currBeat < event.timeEnd) {
       if (tempBeat < event.time || tempBeat >= event.timeEnd) event.end();

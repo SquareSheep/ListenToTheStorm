@@ -1,14 +1,17 @@
 class Event {
   boolean finished = false;
+  boolean ending = false;
   boolean spawned = false;
   float time;
   float timeEnd;
+  float timeEnding;
 
   Event() {}
 
   Event(float time, float timeEnd) {
     this.time = time;
     this.timeEnd = timeEnd;
+    this.timeEnding = timeEnd;
   }
 
   void spawn() {}
@@ -16,6 +19,8 @@ class Event {
   void update() {}
 
   void render() {}
+
+  void ending() {}
 
   void end() {}
 }
