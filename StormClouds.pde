@@ -72,9 +72,9 @@ class StormClouds extends Entity {
 		pop();
 	}
 
-	void addClouds(float num, float minW, float maxW, float gray) {
+	void addClouds(float num, float minW, float maxW) {
 		for (int i = 0 ; i < num ; i ++) {
-			float g = random(-25,25) + gray;
+			float g = random(-25,25) + 100;
 			float W = random(minW*w.x,maxW*w.x);
 			float wx = W*random(0.8,1.2);
 			float wy = W*random(0.8,1.2);
@@ -128,6 +128,8 @@ class Cloud extends Mob {
 		this.ang.vMult = 0.1;
 		this.ang.reset(random(-PI,PI),random(-PI,PI),random(-PI,PI));
 		this.fillStyle = new IColor(r,g,b,255);
+		this.fillStyle.setMass(15);
+		this.fillStyle.setVMult(0.25);
 	}
 
 	void update() {
@@ -149,7 +151,7 @@ class Cloud extends Mob {
 class RainPool extends ObjectPool<RainDrop> {
 
 	PVector rainW = new PVector(0.005,0.025,0.005);
-	IColor fillStyle = new IColor(125,125,255,255);
+	IColor fillStyle = new IColor();
 
 	void set(RainDrop mob, float x, float y, float z, float vx, float vy, float vz) {
 		mob.p.reset(x,y,z);
@@ -189,7 +191,7 @@ class RainDrop extends Mob {
 	void render() {
 		setDraw();
 		fillStyle.fillStyle();
-		box(w.p.x,w.p.y,w.p.z);
+		rect(0,0,w.p.x,w.p.y);
 		pop();
 	}
 }

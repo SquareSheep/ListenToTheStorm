@@ -46,11 +46,13 @@ class MountainRange extends Entity {
 class Mountain extends Entity {
 	Point w;
 	Point p;
-	IColor fillStyle = new IColor(86,80,72,255);
+	IColor fillStyle = new IColor();
 
 	Mountain(float x, float y, float z, float w, float h, float d) {
 		this.p = new Point(x,y,z);
 		this.w = new Point(w,h,d);
+		fillStyle.setMass(15);
+		fillStyle.setVMult(0.25);
 	}
 
 	void update() {

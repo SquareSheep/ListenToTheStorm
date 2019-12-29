@@ -369,6 +369,13 @@ class IColor extends AColor {
     this(0,0,0,0, 0,0,0,0, -1);
   }
 
+  IColor(IColor other) {
+  	super(other.rc,other.gc,other.bc,other.ac);
+  	this.rm = other.rm; this.gm = other.gm; this.bm = other.bm; this.am = other.am;
+  	this.rc = other.rc; this.gc = other.gc; this.bc = other.bc; this.ac = other.ac;
+    this.index = other.index;
+  }
+
   IColor copy() {
   	return new IColor(rc, gc, bc, ac, rm, gm, bm, am, index);
   }
@@ -454,6 +461,12 @@ class IColor extends AColor {
 
   void reset(float rc, float gc, float bc, float ac) {
   	reset(rc,gc,bc,ac, 0,0,0,0,-1);
+  }
+
+  void reset(IColor other) {
+  	this.rm = other.rm; this.gm = other.gm; this.bm = other.bm; this.am = other.am;
+  	this.rc = other.rc; this.gc = other.gc; this.bc = other.bc; this.ac = other.ac;
+    this.index = other.index;
   }
 }
 
