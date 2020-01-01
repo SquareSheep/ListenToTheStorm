@@ -37,6 +37,7 @@ MountainRange mountainRange;
 StormClouds stormClouds;
 StormClouds stormClouds2;
 TriangleGridVisualizer ground;
+LightPool lightBeams;
 
 SpringValue backFillAmp = new SpringValue(0,0.05,150);
 IColor cloudFill = new IColor(140,140,140,255, 2,2,2,0, -1);
@@ -47,6 +48,10 @@ IColor groundFill = new IColor(96,128,56,255, 3,3,3,0, -1);
 void render() {
 	backFillAmp.update();
 	background(135*backFillAmp.x,206*backFillAmp.x,255*backFillAmp.x,255);
+
+	if (frameCount % 15 == 0) {
+		lightBeams.add(random(-de,de),random(-de,de),random(-de,de),random(-de,de),3,3);
+	}
 }
 
 void addEvents() {
@@ -71,6 +76,9 @@ void setSketch() {
 	float mult = 1;
 	front = new PVector(de*mult,de*mult,de*mult);
   	back = new PVector(-de*mult,-de*mult,-de*mult);
+
+  	lightBeams = new LightPool();
+  	mobs.add(lightBeams);
 
   	ground = new TriangleGridVisualizer(new PVector(0,0,de*0.5), new PVector(-PI/2,0,0), de*0.1,25,33);
   	ground.setFillStyleMass(30);
