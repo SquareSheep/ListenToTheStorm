@@ -1,4 +1,22 @@
-// Sets up fillStyles and indices for the systems
+class GroundIndexShift extends Event {
+	int amp;
+	int tick;
+	GroundIndexShift(float time, float timeEnd, int amp, int tick) {
+		super(time, timeEnd);
+		this.amp = amp;
+		this.tick = tick;
+	}
+
+	GroundIndexShift(float time, float timeEnd) {
+		this(time, timeEnd, 1,12);
+	}
+
+	void update() {
+		if (frameCount % tick == 0) {
+			ground.shiftIndex(amp,0,0.25);
+		}
+	}
+}
 class SysFillC extends Event {
 	float amp;
 	SysFillC(float time, float amp) {
@@ -13,6 +31,7 @@ class SysFillC extends Event {
 		stormClouds.setCloudFillStyleC(cloudFill.rc*amp, cloudFill.gc*amp,cloudFill.bc*amp,255);
 		stormClouds2.setCloudFillStyleC(cloudFill.rc*amp*1.4, cloudFill.gc*amp*1.4,cloudFill.bc*amp*1.4,255);
 		mountainRange.setFillStyleC(mountainFill.rc*amp, mountainFill.gc*amp, mountainFill.bc*amp,255);
+		ground.setFillStyleC(groundFill.rc*amp, groundFill.gc*amp, groundFill.bc*amp, 255);
 	}
 }
 
@@ -29,6 +48,7 @@ class SysFillM extends Event {
 		stormClouds.setCloudFillStyleM(cloudFill.rm*amp, cloudFill.gm*amp,cloudFill.bm*amp,0, 0,0.25);
 		stormClouds2.setCloudFillStyleM(cloudFill.rm*amp, cloudFill.gm*amp,cloudFill.bm*amp,0, 0,0.25);
 		mountainRange.setFillStyleM(mountainFill.rm*amp, mountainFill.gm*amp, mountainFill.bm*amp,0, 0,0.25);
+		ground.setFillStyleM(groundFill.rm*amp, groundFill.gm*amp, groundFill.bm*amp,0, 0,0.25);
 	}
 }
 

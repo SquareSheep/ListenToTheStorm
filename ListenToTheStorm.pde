@@ -57,7 +57,6 @@ void setup() {
 }
 
 void draw() {
-  background(0);
   cam.render();
   update();
 
@@ -93,22 +92,24 @@ void update() {
 void updateEvents() {
   for (int i = 0 ; i < events.size() ; i ++) {
     Event event = events.get(i);
-    if (!event.finished) {
-        if (currBeat >= event.time && currBeat < event.timeEnd) {
-          if (!event.spawned) {
-            event.spawned = true;
-            event.spawn();
-          }
-          event.update();
-          event.render();
-          if (currBeat == event.timeEnding && !event.ending) {
-          	event.ending = true;
-          	event.ending();
-          }
-        } else if (currBeat >= event.timeEnd) {
-            event.finished = true;
-            event.end();
+    if (currBeat >= event.time && currBeat < event.timeEnd) {
+      if (!event.spawned) {
+        event.spawned = true;
+        event.spawn();
+      }
+      event.update();
+      event.render();
+      if (currBeat == event.timeEnding && !event.ending) {
+      	event.ending = true;
+      	event.ending();
+      }
+    } else if (currBeat >= event.timeEnd) {
+        if (!event.spawned) {
+          event.spawned = true;
+          event.spawn();
         }
+        event.finished = true;
+        event.end();
     }
   }
 }

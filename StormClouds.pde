@@ -8,11 +8,29 @@ class StormClouds extends Entity {
 	PVector w;
 	Point p;
 	RainPool rain = new RainPool();
+	int currVGraph = 0;
+	boolean spawnClouds = true;
 
 	StormClouds(PVector p, float wx, float wy, float wz) {
 		this.ar = new ArrayList<Cloud>();
 		this.w = new PVector(wx,wy,wz);
 		this.p = new Point(p);
+	}
+
+	void setVGraph(Cloud mob) {
+		switch (currVGraph) {
+			case 0:
+				break;
+			case 1:
+				mob.p.P.x += abs(mob.p.p.x)/mob.p.p.x;
+				mob.p.P.x *= 1.01;
+				break;
+			case 2:
+				mob.p.P.x += (noise(mob.p.p.x/25, mob.p.p.y/25)-0.5)*de*0.1;
+				mob.p.P.z += (noise(mob.p.p.z/25, mob.p.p.x/25)-0.5)*de*0.1;
+				break;
+			default: break;
+		}	
 	}
 
 	void update() {
@@ -21,43 +39,47 @@ class StormClouds extends Entity {
 		rain.update();
 		for (int i = 0 ; i < ar.size() ; i ++) {
 			Cloud mob = ar.get(i);
-			if ((frameCount + mob.tick) % (int)(rainAmp/(avg+1)) < 2) {
-				rain.add(mob.p.p.x+random(-mob.w.p.x,mob.w.p.x), mob.p.p.y+random(-mob.w.p.y,mob.w.p.y), 
-					mob.p.p.z+random(-mob.w.p.z,mob.w.p.z),  mob.rainV.p.x, mob.rainV.p.y + avg, mob.rainV.p.z);
-			}
-			if (mob.lifeSpan != -1) {
-				mob.lifeSpan --;
-				if (mob.lifeSpan == 0) {
-					mob.p.reset(random(-w.x,w.x),random(-w.y,w.y),random(-w.z,w.z));
-					mob.pv.reset(0,0,0);
-					mob.w.p.set(0,0,0);
-					mob.w.P.add(mob.wd);
-					mob.lifeSpan = -1;
+			if (mob.draw) {
+				if ((frameCount + mob.tick) % (int)(rainAmp/(avg+1)) < 2) {
+					rain.add(mob.p.p.x+random(-mob.w.p.x,mob.w.p.x), mob.p.p.y+random(-mob.w.p.y,mob.w.p.y), 
+						mob.p.p.z+random(-mob.w.p.z,mob.w.p.z),  mob.rainV.p.x, mob.rainV.p.y + avg, mob.rainV.p.z);
 				}
-			} else {
-				if (mob.p.p.x > w.x || mob.p.p.y > w.y || mob.p.p.z > w.z
-					|| mob.p.p.x < -w.x || mob.p.p.y < -w.y || mob.p.p.z < -w.z) {
-					mob.lifeSpan = cloudBoudaryLifeSpan;
-					mob.w.P.set(0,0,0);
+				if (mob.lifeSpan != -1) {
+					mob.lifeSpan --;
+					if (mob.lifeSpan == 0) {
+						mob.p.reset(random(-w.x,w.x),random(-w.y,w.y),random(-w.z,w.z));
+						mob.pv.reset(0,0,0);
+						mob.w.p.set(0,0,0);
+						mob.w.P.add(mob.wd);
+						mob.lifeSpan = -1;
+						if (!spawnClouds) mob.draw = false;
+					}
 				} else {
-					if ((frameCount+mob.tick) % 16 == 0) {
-						mob.pv.P.set(0,0,0);
-						float dist;
-						for (int k = 0 ; k < ar.size() ; k ++) {
-							if (i != k) {
-								Cloud mo2 = ar.get(k);
-								dist = sqrt(pow(mob.p.p.x-mo2.p.p.x,2) + pow(mob.p.p.y-mo2.p.p.y,2) + pow(mob.p.p.z-mo2.p.p.z,2));
-								mob.pv.P.add((mob.p.p.x-mo2.p.p.x)/dist*cloudRepelAmp, (mob.p.p.y-mo2.p.p.y)/dist*cloudRepelAmp,(mob.p.p.z-mo2.p.p.z)/dist*cloudRepelAmp);
+					if (mob.p.p.x > w.x || mob.p.p.y > w.y || mob.p.p.z > w.z
+						|| mob.p.p.x < -w.x || mob.p.p.y < -w.y || mob.p.p.z < -w.z) {
+						mob.lifeSpan = cloudBoudaryLifeSpan;
+						mob.w.P.set(-50,-50,-50);
+					} else {
+						if ((frameCount+mob.tick) % 16 == 0) {
+							mob.pv.P.set(0,0,0);
+							float dist;
+							for (int k = 0 ; k < ar.size() ; k ++) {
+								if (i != k) {
+									Cloud mo2 = ar.get(k);
+									dist = sqrt(pow(mob.p.p.x-mo2.p.p.x,2) + pow(mob.p.p.y-mo2.p.p.y,2) + pow(mob.p.p.z-mo2.p.p.z,2));
+									mob.pv.P.add((mob.p.p.x-mo2.p.p.x)/dist*cloudRepelAmp, (mob.p.p.y-mo2.p.p.y)/dist*cloudRepelAmp,(mob.p.p.z-mo2.p.p.z)/dist*cloudRepelAmp);
+								}
 							}
 						}
-					}
-					if ((frameCount+mob.tick) % 180 == 0) {
-						mob.ang.P.set((noise(mob.p.p.x, mob.p.p.y,mob.p.p.z)-0.5)*2*PI,
-							(noise(mob.p.p.y, mob.p.p.x,mob.p.p.z)-0.5)*2*PI,(noise(mob.p.p.z, mob.p.p.y,mob.p.p.x)-0.5)*2*PI);
+						if ((frameCount+mob.tick) % 180 == 0) {
+							mob.ang.P.set((noise(mob.p.p.x, mob.p.p.y,mob.p.p.z)-0.5)*2*PI,
+								(noise(mob.p.p.y, mob.p.p.x,mob.p.p.z)-0.5)*2*PI,(noise(mob.p.p.z, mob.p.p.y,mob.p.p.x)-0.5)*2*PI);
+						}
 					}
 				}
+				setVGraph(mob);
+				mob.update();
 			}
-			mob.update();
 		}
 	}
 

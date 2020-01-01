@@ -1,26 +1,32 @@
 /*
 Listen To The Storm
 
-Main systems:
-
+Done:
 Mountain range
 Storm clouds + rain
-Lightning
-Foreground grass
-Sun + sun rays
+Rain
+Ground visualizer
+
+To Do:
+
+Horizon bars
+Sun
+Sun rays
+Cloud LightBeam class
+Static background stars
 */
 
 static float bpm = 81;
 static int threshold = 50;
 static int offset = 0;
-static int binCount = 144;
+static int binCount = 200;
 static float defaultMass = 30;
 static float defaultVMult = 0.5;
 static float fillMass = 15;
 static float fillVMult = 0.5;
 static float fftThreshold = 1;
-static float fftPow = 1.2;
-static float fftAmp = 2;
+static float fftPow = 1.5;
+static float fftAmp = 3;
 static float volumeGain = -10;
 static String songName = "../Music/listentothestorm.mp3";
 
@@ -30,23 +36,21 @@ IColor defaultStroke = new IColor(0,0,0,0, 5,5,5,5,-1);
 MountainRange mountainRange;
 StormClouds stormClouds;
 StormClouds stormClouds2;
+TriangleGridVisualizer ground;
 
 SpringValue backFillAmp = new SpringValue(0,0.05,150);
 IColor cloudFill = new IColor(140,140,140,255, 2,2,2,0, -1);
 IColor mountainFill = new IColor(86,80,72,255, 2,2,5,0, -1);
 IColor rainFill = new IColor(105,105,175,255, 3,3,3,0, -1);
+IColor groundFill = new IColor(96,128,56,255, 3,3,3,0, -1);
 
 void render() {
 	backFillAmp.update();
-	push();
-	translate(0,0,de*0.5);
-	fill(65*backFillAmp.x,75*backFillAmp.x,55*backFillAmp.x,255);
-	rotateX(PI/2);
-	rect(0,0,de*3.3,de*3);
-	pop();
+	background(135*backFillAmp.x,206*backFillAmp.x,255*backFillAmp.x,255);
 }
 
 void addEvents() {
+	events.add(new GroundIndexShift(0,1000));
 	events.add(new SysFillM(0,0));
 	events.add(new SysFillC(0,0.1));
 	for (float i = 0 ; i < 10 ; i ++) {
@@ -61,11 +65,16 @@ void keyboardInput() {
 }
 
 void setSketch() {
+	noiseSeed(0);
 	noStroke();
 
 	float mult = 1;
 	front = new PVector(de*mult,de*mult,de*mult);
   	back = new PVector(-de*mult,-de*mult,-de*mult);
+
+  	ground = new TriangleGridVisualizer(new PVector(0,0,de*0.5), new PVector(-PI/2,0,0), de*0.1,25,33);
+  	ground.setFillStyleMass(30);
+  	mobs.add(ground);
 
   	mountainRange = new MountainRange(new PVector(0,0,back.z), new PVector(de*1.6,de*0.5,de*0.3));
   	mountainRange.addMountains(12, 0, 0.31,0.55, 0.7,1, 0.3,1);
