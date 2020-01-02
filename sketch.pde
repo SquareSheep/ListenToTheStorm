@@ -26,7 +26,7 @@ static float fillVMult = 0.5;
 static float fftThreshold = 1;
 static float fftPow = 1.5;
 static float fftAmp = 3;
-static float volumeGain = -30;
+static float volumeGain = -10;
 static String songName = "../Music/listentothestorm.mp3";
 
 IColor defaultFill = new IColor(0,0,0,0, 5,5,5,5,-1);
@@ -54,7 +54,7 @@ void render() {
 // silence: 211 
 // sunrise: 217 mega sunrise: 243 mega sunrise2: 269 final sunrise: 295
 int[] distort = {11,20,29,38,48,57,66,75,84,93,102,111,120,128,137,145,153,161,168,175};
-int[] distortLifeSpan = {9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,8,7,6,6};
+int[] distortLifeSpan = {8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,7,6,5,5};
 int[] notes = {10,10,9,10,11,11,10,11,12,12,11,13,11,12,11,11,10};
 void addEvents() {
 	events.add(new CurrCloudVGraph(0,0));

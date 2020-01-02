@@ -89,7 +89,7 @@ class DistortionBeams extends Event {
 		float x; float z;
 		for (int i = 0 ; i < num ; i ++) {
 			x = random(-de,de); z = random(-de,0);
-			lightBeams.add(x,z, x+random(-de*0.2,de*0.2), z+random(-de*0.2,de*0.2),0,0, (int)time, (int)time+lifeSpan);
+			lightBeams.add(x,z, x+random(-de*0.2,de*0.2), z+random(-de*0.2,de*0.2),0,0, lifeSpan);
 			LightBeam lightBeam = lightBeams.ar.get(lightBeams.arm-1);
 			lightBeam.v.set((noise(lightBeam.p2.x)-0.5)*10,(noise(lightBeam.p2.y)-0.5)*10);
 			lightBeam.fillStyle.setC(r,g,b,255);
