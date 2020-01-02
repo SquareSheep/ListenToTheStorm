@@ -42,7 +42,21 @@ class MountainRange extends Entity {
 			ar.get(i).fillStyle.setC(r,g,b,a);
 		}
 	}
+
+	void setFillStyleMass(float mass) {
+		for (int i = 0 ; i < ar.size() ; i ++) {
+			ar.get(i).fillStyle.setMass(mass);
+		}
+	}
+
+	void setMountainWM(float amp) {
+		for (int i = 0 ; i < ar.size() ; i ++) {
+			ar.get(i).w.pm.set(amp,-amp,amp);
+			ar.get(i).w.index = (int)((float)i/ar.size()*binCount*0.45);
+		}
+	}
 }
+
 class Mountain extends Entity {
 	Point w;
 	Point p;

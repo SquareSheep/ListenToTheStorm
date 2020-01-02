@@ -1,14 +1,88 @@
+class Sunrise extends Event {
+	Sunrise(float time) {
+		super(time, time+30);
+	}
+
+	void spawn() {
+		sun.draw = true;
+		stormClouds.spawnClouds = false;
+		stormClouds.currVGraph = 1;
+		stormClouds2.spawnClouds = false;
+		stormClouds2.currVGraph = 1;
+		backFillAmp.X = 1.5;
+		mountainRange.setMountainWM(3);
+	}
+
+	void update() {
+		if (sun.p.P.y > -de) sun.p.P.y -= de/60/15;
+	}
+}
+
+class FinalSunrise extends Event {
+	FinalSunrise(float time, float timeEnd) {
+		super(time, timeEnd);
+	}
+
+	void spawn() {
+		ground.setPointPM(2);
+		mountainRange.setMountainWM(6);
+		mountainRange.setFillStyleMass(5);
+	}
+
+	void update() {
+		if (frameCount % 12 == 0) {
+			for (int i = 0 ; i < mountainRange.ar.size() ; i ++) {
+				Mountain mob = mountainRange.ar.get(i);
+				mob.fillStyle.setC(random(125,200),random(155,255),random(75,200),255);
+				mob.fillStyle.setM(random(0,2),random(0,2),random(0,2),0);
+			}
+			for (int i = 0 ; i < ground.col ; i ++) {
+				ground.fillStyle[i].setC(random(0,55),random(75,175),random(0,55),255);
+				ground.fillStyle[i].setM(random(0,1),random(0,1),random(0,1),0);
+			}
+		}
+	}
+}
+
+class MegaSunrise extends Event {
+	float amp;
+	MegaSunrise(float time, float amp) {
+		super(time, time+1);
+		this.amp = amp;
+	}
+
+	void spawn() {
+		ground.setPointPM(amp);
+		mountainRange.setMountainWM(3*amp);
+	}
+}
+
+class CurrCloudVGraph extends Event {
+	int index;
+	CurrCloudVGraph(float time, int index) {
+		super(time, time+1);
+		this.index = index;
+	}
+
+	void spawn() {
+		stormClouds.currVGraph = index;
+		stormClouds2.currVGraph = index;
+	}
+}
+
 class DistortionBeams extends Event {
 	int num;
 	int lifeSpan;
-	DistortionBeams(float time, int lifeSpan, int num) {
+	float r; float g; float b; float rm; float gm; float bm;
+	DistortionBeams(float time, int lifeSpan, int num, float r, float g, float b, float rm, float gm, float bm) {
 		super(time, time+1);
 		this.lifeSpan = lifeSpan;
 		this.num = num;
+		this.r = r; this.g = g; this.b = b; this.rm = rm; this.gm = gm; this.bm = bm;
 	}
 
 	DistortionBeams(float time, int lifeSpan) {
-		this(time, lifeSpan, 16);
+		this(time, lifeSpan, 16, 255,255,255,0,0,0);
 	}
 
 	void spawn() {
@@ -18,6 +92,8 @@ class DistortionBeams extends Event {
 			lightBeams.add(x,z, x+random(-de*0.2,de*0.2), z+random(-de*0.2,de*0.2),0,0, (int)time, (int)time+lifeSpan);
 			LightBeam lightBeam = lightBeams.ar.get(lightBeams.arm-1);
 			lightBeam.v.set((noise(lightBeam.p2.x)-0.5)*10,(noise(lightBeam.p2.y)-0.5)*10);
+			lightBeam.fillStyle.setC(r,g,b,255);
+			lightBeam.fillStyle.setM(rm,gm,bm,0,(float)i/num*binCount*0.25);
 		}
 	}
 }

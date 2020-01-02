@@ -2,14 +2,14 @@ class Sun extends Entity {
 	Point p;
 	SpringValue w;
 	IColor fillStyle;
-	SunBeam[] ar = new SunBeam[16];
+	SunBeam[] ar = new SunBeam[64];
 
 	Sun(PVector p, float w) {
 		sphereDetail(12);
 		this.p = new Point(p);
 		this.w = new SpringValue(w, 0.2,10);
 		this.fillStyle = new IColor(255,255,125,255);
-		for (int i = 0 ; i < 16 ; i ++) {
+		for (int i = 0 ; i < ar.length ; i ++) {
 			ar[i] = new SunBeam();
 		}
 	}
@@ -34,25 +34,31 @@ class Sun extends Entity {
 		pop();
 	}
 
-	void addBeam(float ang, float minI, float maxI) {
+	void addBeam(float ang, float minI, float maxI, float r, float g, float b, float rm, float gm, float bm) {
 		int index = 0;
-		while (index < ar.length -1 && ar[index].draw) {
+		while (index < ar.length && ar[index].draw) {
 			index ++;
-		}	
-		for (int i = 0 ; i < ar[index].ar.length ; i ++) {
-			float k = (float)i/ar[index].ar.length*(maxI-minI)*binCount + minI*binCount;
-			ar[index].ar[i].index = (int)k;
-			ar[index].ar2[i].index = (int)k;
 		}
-		ar[index].draw = true;
-		ar[index].lifeSpan = (int)(fpb*4);
-		ar[index].fillStyle.setx(0,0,0,0);
-		ar[index].fillStyle.setC(255,150,75,255);
-		ar[index].ang.reset(ang);
+		if (index < ar.length) {
+			for (int i = 0 ; i < ar[index].ar.length ; i ++) {
+				float k = (float)i/ar[index].ar.length*(maxI-minI)*binCount + minI*binCount;
+				ar[index].ar[i].index = (int)k;
+				ar[index].ar2[i].index = (int)k;
+			}
+			ar[index].draw = true;
+			ar[index].lifeSpan = 180;
+			ar[index].fillStyle.reset(r,g,b,255, rm,gm,bm,0, (float)index/ar.length*binCount);
+			ar[index].fillStyle.setx(0,0,0,0);
+			ar[index].ang.reset(ang);
+		}
+	}
+
+	void addBeam(float ang, float r, float g, float b) {
+		addBeam(ang, 0,0.35, r,g,b,0,0,0);
 	}
 
 	void addBeam(float ang) {
-		addBeam(ang,0,0.45);
+		addBeam(ang,0,0.35, 255,150,75,0,0,0);
 	}
 
 	class SunBeam extends Entity {
@@ -63,20 +69,21 @@ class Sun extends Entity {
 		SpringValue ang = new SpringValue();
 		SunBeam() {
 			draw = false;
+			float angle = 0.03;
 			float amp = 2;
-			float length = de*0.1;
-			float x = cos(-0.1)*length;
-			float y = sin(-0.1)*length;
-			float x2 = cos(0.1)*length;
-			float y2 = sin(0.1)*length;
+			float length = de*0.2;
+			float x = cos(-angle)*length;
+			float y = sin(-angle)*length;
+			float x2 = cos(angle)*length;
+			float y2 = sin(angle)*length;
 			float z = random(-5,5);
 			for (int i = 0 ; i < ar.length ; i ++) {
 				ar[i] = new Point(x*i, y*i, z);
-				ar[i].pm.set(0,3,0);
+				ar[i].pm.set(0,-amp,0);
 				ar2[i] = new Point(x2*i, y2*i, z);
-				ar2[i].pm.set(0,-3,0);
-				//amp = -amp;
+				ar2[i].pm.set(0,amp,0);
 			}
+			fillStyle.setMass(30);
 		}
 
 		void update() {
@@ -89,8 +96,12 @@ class Sun extends Entity {
 			if (lifeSpan > 0) {
 				lifeSpan --;
 			} else {
-				if (fillStyle.r.X != 0) fillStyle.setC(0,0,0,0);
-				if (fillStyle.r.x < 3) draw = false;
+				if (fillStyle.a.X != 0) {
+					fillStyle.setC(0,0,0,0);
+				} else {
+					fillStyle.a.x --;
+					if (fillStyle.a.x < 3) draw = false;
+				}
 			}
 		}
 

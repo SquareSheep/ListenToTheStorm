@@ -1,5 +1,5 @@
 Point rainVel = new Point(1,12,1);
-float rainAmp = 600;
+float rainAmp = 300;
 int cloudBoudaryLifeSpan = 300;
 float cloudRepelAmp = 0.01;
 

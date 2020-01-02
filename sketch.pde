@@ -9,11 +9,10 @@ Ground visualizer
 
 To Do:
 
+Sun ray notes
+Boids for sunrise
 Horizon bars
-Sun
-Sun rays
-Cloud LightBeam class
-Static background stars
+Static background stars during storm
 */
 
 static float bpm = 81;
@@ -27,7 +26,7 @@ static float fillVMult = 0.5;
 static float fftThreshold = 1;
 static float fftPow = 1.5;
 static float fftAmp = 3;
-static float volumeGain = -10;
+static float volumeGain = -30;
 static String songName = "../Music/listentothestorm.mp3";
 
 IColor defaultFill = new IColor(0,0,0,0, 5,5,5,5,-1);
@@ -49,10 +48,6 @@ IColor groundFill = new IColor(96,128,56,255, 3,3,3,0, -1);
 void render() {
 	backFillAmp.update();
 	background(35*backFillAmp.x,122*backFillAmp.x,175*backFillAmp.x,255);
-
-	if (frameCount % 30 == 0) {
-		sun.addBeam(random(-PI,PI));
-	}
 }
 // Distorted fog 11, 20, 29, 38, 47,57,66,75,84,93,102,111,120,128.5,137,145,153,161,168,175
 // Drawn out distortion: 185
@@ -60,21 +55,32 @@ void render() {
 // sunrise: 217 mega sunrise: 243 mega sunrise2: 269 final sunrise: 295
 int[] distort = {11,20,29,38,48,57,66,75,84,93,102,111,120,128,137,145,153,161,168,175};
 int[] distortLifeSpan = {9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,8,7,6,6};
+int[] notes = {10,10,9,10,11,11,10,11,12,12,11,13,11,12,11,11,10};
 void addEvents() {
+	events.add(new CurrCloudVGraph(0,0));
 	events.add(new GroundIndexShift(0,1000));
 	events.add(new SysFillM(0,0));
 	events.add(new SysFillC(0,0.1));
 	for (int i = 0 ; i < 10 ; i ++) {
-		events.add(new SysFillC(distort[i],(i+1)*0.1));
-		events.add(new SysFillM(distort[i],(i+1)*0.1));
+		events.add(new SysFillC(distort[i],(i+1)*0.07));
+		events.add(new SysFillM(distort[i],(i+1)*0.07));
 	}
 	for (int i = 0 ; i < distort.length ; i ++) {
 		events.add(new DistortionBeams(distort[i], distortLifeSpan[i]));
 	}
+	events.add(new CurrCloudVGraph(185,2));
+	events.add(new CurrCloudVGraph(211,0));
+	events.add(new Sunrise(217));
+	events.add(new MegaSunrise(243,1.5));
+	events.add(new MegaSunrise(269,3));
+	events.add(new FinalSunrise(295,350));
 }
 
 void keyboardInput() {
-
+	if (keyP == 'z' || keyP == 'x') {
+		sun.addBeam(random(-PI,PI),0,0.35, 200+(noise(frameCount/10)-0.5)*50,150+(noise(frameCount/10)-0.5)*50,75+(noise(frameCount/10)-0.5)*50,
+			noise(frameCount/100)*10,noise(frameCount/100+10)*10,noise(frameCount/100+100)*10);
+	}
 }
 
 void setSketch() {
@@ -85,14 +91,15 @@ void setSketch() {
 	front = new PVector(de*mult,de*mult,de*mult);
   	back = new PVector(-de*mult,-de*mult,-de*mult);
 
-  	sun = new Sun(new PVector(0,-de*0.5,-de), de*0.15);
+  	sun = new Sun(new PVector(0,0,-de*1.2), de*0.15);
+  	sun.draw = false;
   	mobs.add(sun);
 
   	lightBeams = new LightPool();
   	mobs.add(lightBeams);
 
-  	ground = new TriangleGridVisualizer(new PVector(0,0,de*0.5), new PVector(-PI/2,0,0), de*0.1,25,33);
-  	ground.setFillStyleMass(30);
+  	ground = new TriangleGridVisualizer(new PVector(0,0,de*0.5), new PVector(-PI/2,0,0), de*0.1,27,36);
+  	ground.setFillStyleMass(100);
   	mobs.add(ground);
 
   	mountainRange = new MountainRange(new PVector(0,0,back.z), new PVector(de*1.6,de*0.5,de*0.3));

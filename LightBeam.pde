@@ -6,7 +6,7 @@ class LightPool extends ObjectPool<LightBeam> {
 		mob.fillStyle.setx(0,0,0,0);
 		mob.fillStyle.setC(255,255,255,255);
 		mob.w.reset(0,10,0.2,15);
-		mob.p.set(x1,back.y*1.5,z1);
+		mob.p.set(x1,back.y*2,z1);
 		mob.p2.set(x2,0,z2);
 		mob.v.set(vx,0,vz);
 		mob.time = time;

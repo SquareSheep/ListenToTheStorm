@@ -84,4 +84,12 @@ class TriangleGridVisualizer extends Mob {
 			fillStyle[i].setMass(mass);
 		}
 	}
+
+	void setPointPM(float amp) {
+		for (int i = 0 ; i < col ; i ++) {
+			for (int k = 0 ; k < row ; k ++) {
+				ar[i][k].pm.set(0,0,-de*0.003*amp);
+			}
+		}
+	}
 }
