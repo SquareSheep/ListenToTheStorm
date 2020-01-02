@@ -1,6 +1,6 @@
 class LightPool extends ObjectPool<LightBeam> {
 
-	void set(LightBeam mob, float x1, float z1, float x2, float z2, float vx, float vz) {
+	void set(LightBeam mob, float x1, float z1, float x2, float z2, float vx, float vz, int time, int timeEnd) {
 		mob.draw = true;
 		mob.finished = false;
 		mob.fillStyle.setx(0,0,0,0);
@@ -9,16 +9,17 @@ class LightPool extends ObjectPool<LightBeam> {
 		mob.p.set(x1,back.y*1.5,z1);
 		mob.p2.set(x2,0,z2);
 		mob.v.set(vx,0,vz);
-		mob.lifeSpan = (int)fpb*3;
+		mob.time = time;
+		mob.timeEnd = timeEnd;
 	}
 
-	void add(float x1, float z1, float x2, float z2, float vx, float vz) {
+	void add(float x1, float z1, float x2, float z2, float vx, float vz, int time, int timeEnd) {
 		if (arm == ar.size()) {
 			LightBeam mob = new LightBeam();
-			set(mob, x1, z1, x2, z2, vx, vz);
-			ar.add(0,mob);
+			set(mob, x1, z1, x2, z2, vx, vz, time, timeEnd);
+			ar.add(mob);
 		} else {
-			set(ar.get(arm), x1, z1, x2, z2, vx, vz);
+			set(ar.get(arm), x1, z1, x2, z2, vx, vz, time, timeEnd);
 		}
 		arm ++;
 	}
@@ -29,18 +30,18 @@ class LightBeam extends Entity {
 	PVector p2 = new PVector();
 	PVector v = new PVector();
 	IColor fillStyle = new IColor();
-	int lifeSpan;
+	int time;
+	int timeEnd;
 	SpringValue w = new SpringValue();
 
 	void update() {
 		p2.add(v);
 		fillStyle.update();
 		w.update();
-		lifeSpan --;
-		if (lifeSpan == 10) {
+		if (currBeat - timeEnd == -1) {
 			fillStyle.setX(0,0,0,0);
 		}
-		if (lifeSpan <= 0) finished = true;
+		if (currBeat >= timeEnd || currBeat < time) finished = true;
 	}
 
 	void render() {

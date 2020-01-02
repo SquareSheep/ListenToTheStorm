@@ -1,3 +1,27 @@
+class DistortionBeams extends Event {
+	int num;
+	int lifeSpan;
+	DistortionBeams(float time, int lifeSpan, int num) {
+		super(time, time+1);
+		this.lifeSpan = lifeSpan;
+		this.num = num;
+	}
+
+	DistortionBeams(float time, int lifeSpan) {
+		this(time, lifeSpan, 16);
+	}
+
+	void spawn() {
+		float x; float z;
+		for (int i = 0 ; i < num ; i ++) {
+			x = random(-de,de); z = random(-de,0);
+			lightBeams.add(x,z, x+random(-de*0.2,de*0.2), z+random(-de*0.2,de*0.2),0,0, (int)time, (int)time+lifeSpan);
+			LightBeam lightBeam = lightBeams.ar.get(lightBeams.arm-1);
+			lightBeam.v.set((noise(lightBeam.p2.x)-0.5)*10,(noise(lightBeam.p2.y)-0.5)*10);
+		}
+	}
+}
+
 class GroundIndexShift extends Event {
 	int amp;
 	int tick;
@@ -52,20 +76,20 @@ class SysFillM extends Event {
 	}
 }
 
-float distortionPAmp = 0.03;
-float distortionAngAmp = 0.0003;
-float distortionW = 0.04;
-float distortionWAmp = 0.01;
+float BoidPAmp = 0.03;
+float BoidAngAmp = 0.0003;
+float BoidW = 0.04;
+float BoidWAmp = 0.01;
 float binCutOff = 0.25;
-class Distortion extends Event {
+class Boid extends Event {
 	Poly[] ar;
 
-	Distortion(float time, int num, float r1, float g1, float b1, float r2, float g2, float b2) {
+	Boid(float time, int num, float r1, float g1, float b1, float r2, float g2, float b2) {
 		super(time, time+9);
 		timeEnding = time + 8;
 		ar = new Poly[num];
 		for (int i = 0 ; i < num ; i ++) {
-			ar[i] = newPoly("Pyramid", new PVector(), new PVector(), de*distortionW);
+			ar[i] = newPoly("Pyramid", new PVector(), new PVector(), de*BoidW);
 			ar[i].p.mass = 1000;
 			ar[i].p.vMult = 0.99;
 			ar[i].ang.mass = 1000;
@@ -76,11 +100,11 @@ class Distortion extends Event {
 		}
 	}
 
-	Distortion(float time, int num, float r, float g, float b) {
+	Boid(float time, int num, float r, float g, float b) {
 		this(time, num, r*0.7,g*0.7,b*0.7, r*1.3,g*1.3,b*1.3);
 	}
 
-	Distortion(float time, int num) {
+	Boid(float time, int num) {
 		this(time, num, 100,100,100, 175,175,175);
 	}
 
@@ -90,10 +114,10 @@ class Distortion extends Event {
 			ar[i].sca.X = 1;
 			ar[i].fillStyleSetx(0,0,0,0);
 			ar[i].p.reset(random(back.x,front.x),back.y,random(back.z,front.z));
-			ar[i].p.setM(random(-distortionPAmp*de,distortionPAmp*de),
-				random(-distortionPAmp*de,distortionPAmp*de), distortionPAmp*de,i);
-			ar[i].ang.setM(random(-distortionAngAmp*de,distortionAngAmp*de),
-				random(-distortionAngAmp*de,distortionAngAmp*de), random(-distortionAngAmp*de,distortionAngAmp*de),i);
+			ar[i].p.setM(random(-BoidPAmp*de,BoidPAmp*de),
+				random(-BoidPAmp*de,BoidPAmp*de), BoidPAmp*de,i);
+			ar[i].ang.setM(random(-BoidAngAmp*de,BoidAngAmp*de),
+				random(-BoidAngAmp*de,BoidAngAmp*de), random(-BoidAngAmp*de,BoidAngAmp*de),i);
 		}
 	}
 

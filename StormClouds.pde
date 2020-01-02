@@ -188,11 +188,9 @@ class RainPool extends ObjectPool<RainDrop> {
 
 	void add(float x, float y, float z, float vx, float vy, float vz) {
 		if (arm == ar.size()) {
-			ar.add(0, new RainDrop());
-			set(getLast(), x,y,z, vx,vy,vz);
-		} else {
-			set(ar.get(arm), x,y,z, vx,vy,vz);
+			ar.add(new RainDrop());
 		}
+		set(ar.get(arm), x,y,z, vx,vy,vz);
 		arm ++;
 	}
 }

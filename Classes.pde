@@ -44,7 +44,7 @@ abstract class ObjectPool<T extends Entity> extends Entity {
 
   // void add() {
   //   if (arm == ar.size()) {
-  //     ar.add(0,new Mob(p));
+  //     ar.add(new Mob(p));
   //   } else {
   //     Mob mob = (Mob)ar.get(arm);
   //     // Reset mob
@@ -59,10 +59,6 @@ abstract class ObjectPool<T extends Entity> extends Entity {
 
   T get(int i) {
     return ar.get(i);
-  }
-
-  T getLast() {
-    return ar.get(0); // Returns most recently made object
   }
 
   void render() {

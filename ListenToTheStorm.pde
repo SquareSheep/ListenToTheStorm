@@ -66,14 +66,14 @@ void draw() {
     if (mob.draw) mob.render();
   }
 
-  // fill(255);
+  fill(255);
   // drawBorders();
   // drawWidthBox(de);
   // drawPitches();
-  // push();
-  // translate(0,de*0.75,0);
-  // text(currBeat + " " + (int)frameRate,0,0);
-  // pop();
+  push();
+  translate(0,-de*0.25,0);
+  text(currBeat + " " + (int)frameRate,0,0);
+  pop();
 }
 
 void update() {

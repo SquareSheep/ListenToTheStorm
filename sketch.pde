@@ -48,24 +48,28 @@ IColor groundFill = new IColor(96,128,56,255, 3,3,3,0, -1);
 
 void render() {
 	backFillAmp.update();
-	background(135*backFillAmp.x,206*backFillAmp.x,255*backFillAmp.x,255);
+	background(35*backFillAmp.x,122*backFillAmp.x,175*backFillAmp.x,255);
 
-	if (frameCount % 15 == 0) {
-		lightBeams.add(random(-de,de),random(-de,de),random(-de,de),random(-de,de),3,3);
-	}
 	if (frameCount % 30 == 0) {
 		sun.addBeam(random(-PI,PI));
 	}
 }
-
+// Distorted fog 11, 20, 29, 38, 47,57,66,75,84,93,102,111,120,128.5,137,145,153,161,168,175
+// Drawn out distortion: 185
+// silence: 211 
+// sunrise: 217 mega sunrise: 243 mega sunrise2: 269 final sunrise: 295
+int[] distort = {11,20,29,38,48,57,66,75,84,93,102,111,120,128,137,145,153,161,168,175};
+int[] distortLifeSpan = {9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,8,7,6,6};
 void addEvents() {
 	events.add(new GroundIndexShift(0,1000));
 	events.add(new SysFillM(0,0));
 	events.add(new SysFillC(0,0.1));
-	for (float i = 0 ; i < 10 ; i ++) {
-		events.add(new SysFillM(i*9+10,2-i*0.1));
-		events.add(new SysFillC(i*9+10,i*0.1));
-		events.add(new Distortion(i*9+10, 50+(int)i*5, 15+i*15,15+i*15,15+i*30));
+	for (int i = 0 ; i < 10 ; i ++) {
+		events.add(new SysFillC(distort[i],(i+1)*0.1));
+		events.add(new SysFillM(distort[i],(i+1)*0.1));
+	}
+	for (int i = 0 ; i < distort.length ; i ++) {
+		events.add(new DistortionBeams(distort[i], distortLifeSpan[i]));
 	}
 }
 
@@ -100,10 +104,10 @@ void setSketch() {
   	float dex = (front.x - back.x)*0.6;
 
   	stormClouds = new StormClouds(new PVector(0,-de*1.05,de*0.5), dex,de*0.15,dex);
-  	stormClouds.addClouds(110, 0.15,0.25);
+  	stormClouds.addClouds(130, 0.15,0.3);
   	mobs.add(stormClouds);
 
   	stormClouds2 = new StormClouds(new PVector(0,-de*1.25,de*0.5), dex,de*0.1,dex);
-  	stormClouds2.addClouds(180, 0.05,0.25);
+  	stormClouds2.addClouds(150, 0.1,0.15);
   	mobs.add(stormClouds2);
 }
