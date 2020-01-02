@@ -341,6 +341,24 @@ class SpringValue {
     }
     x += v;
   }
+
+  void reset(float x) {
+  	this.x = x;
+  	this.X = x;
+  }
+
+  void reset(float x, float vMult, float mass) {
+  	reset(x);
+  	this.vMult = vMult;
+  	this.mass = mass;
+  }
+
+  void reset(float x, float X, float vMult, float mass) {
+  	this.x = x;
+  	this.X = X;
+  	this.vMult = vMult;
+  	this.mass = mass;
+  }
 }
 
 class IColor extends AColor {

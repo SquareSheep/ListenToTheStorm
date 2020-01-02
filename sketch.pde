@@ -38,6 +38,7 @@ StormClouds stormClouds;
 StormClouds stormClouds2;
 TriangleGridVisualizer ground;
 LightPool lightBeams;
+Sun sun;
 
 SpringValue backFillAmp = new SpringValue(0,0.05,150);
 IColor cloudFill = new IColor(140,140,140,255, 2,2,2,0, -1);
@@ -51,6 +52,9 @@ void render() {
 
 	if (frameCount % 15 == 0) {
 		lightBeams.add(random(-de,de),random(-de,de),random(-de,de),random(-de,de),3,3);
+	}
+	if (frameCount % 30 == 0) {
+		sun.addBeam(random(-PI,PI));
 	}
 }
 
@@ -76,6 +80,9 @@ void setSketch() {
 	float mult = 1;
 	front = new PVector(de*mult,de*mult,de*mult);
   	back = new PVector(-de*mult,-de*mult,-de*mult);
+
+  	sun = new Sun(new PVector(0,-de*0.5,-de), de*0.15);
+  	mobs.add(sun);
 
   	lightBeams = new LightPool();
   	mobs.add(lightBeams);

@@ -51,7 +51,7 @@ class Mountain extends Entity {
 	Mountain(float x, float y, float z, float w, float h, float d) {
 		this.p = new Point(x,y,z);
 		this.w = new Point(w,h,d);
-		fillStyle.setMass(15);
+		fillStyle.setMass(45);
 		fillStyle.setVMult(0.25);
 	}
 
