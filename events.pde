@@ -1,10 +1,31 @@
+class End extends Event {
+	float amp = 1;
+	End(float time) {
+		super(time, time+1);
+	}
+
+	void spawn() {
+		sun.beam = false;
+		for (int i = 0 ; i < sun.ar.length ; i ++) {
+			sun.ar[i].lifeSpan = 0;
+			sun.ar[i].fillStyle.a.X = 0;
+		}
+		mountainRange.setFillStyleC(mountainFill.rc*amp, mountainFill.gc*amp, mountainFill.bc*amp,255);
+		ground.setFillStyleC(groundFill.rc*amp, groundFill.gc*amp, groundFill.bc*amp, 255);
+	}
+}
+
 class Sunrise extends Event {
 	Sunrise(float time) {
 		super(time, time+30);
 	}
 
 	void spawn() {
+		sun.beam = true;
+		sun.beamTick = 30;
 		sun.draw = true;
+		stormClouds.spawnRain = false;
+		stormClouds2.spawnRain = false;
 		stormClouds.spawnClouds = false;
 		stormClouds.currVGraph = 1;
 		stormClouds2.spawnClouds = false;
@@ -14,7 +35,7 @@ class Sunrise extends Event {
 	}
 
 	void update() {
-		if (sun.p.P.y > -de) sun.p.P.y -= de/60/15;
+		if (sun.p.P.y > -de*0.7) sun.p.P.y -= de*0.7/60/15;
 	}
 }
 
@@ -52,6 +73,8 @@ class MegaSunrise extends Event {
 	}
 
 	void spawn() {
+		sun.beamTick = (int)(10/pow(amp,2));
+		sun.beam = true;
 		ground.setPointPM(amp);
 		mountainRange.setMountainWM(3*amp);
 	}
@@ -81,6 +104,14 @@ class DistortionBeams extends Event {
 		this.r = r; this.g = g; this.b = b; this.rm = rm; this.gm = gm; this.bm = bm;
 	}
 
+	DistortionBeams(float time, int lifeSpan, int num, float r, float g, float b) {
+		this(time, lifeSpan, num, r,g,b, 3,3,3);
+	}
+
+	DistortionBeams(float time, int lifeSpan, float r, float g, float b) {
+		this(time, lifeSpan, 16, r,g,b, 3,3,3);
+	}
+
 	DistortionBeams(float time, int lifeSpan) {
 		this(time, lifeSpan, 16, 255,255,255,0,0,0);
 	}
@@ -92,8 +123,9 @@ class DistortionBeams extends Event {
 			lightBeams.add(x,z, x+random(-de*0.2,de*0.2), z+random(-de*0.2,de*0.2),0,0, lifeSpan);
 			LightBeam lightBeam = lightBeams.ar.get(lightBeams.arm-1);
 			lightBeam.v.set((noise(lightBeam.p2.x)-0.5)*10,(noise(lightBeam.p2.y)-0.5)*10);
-			lightBeam.fillStyle.setC(r,g,b,255);
+			lightBeam.fillStyle.setC(r,g,b,175);
 			lightBeam.fillStyle.setM(rm,gm,bm,0,(float)i/num*binCount*0.25);
+			lightBeam.w.index = (int)((float)i/num*binCount*0.25);
 		}
 	}
 }

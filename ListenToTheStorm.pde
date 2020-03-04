@@ -31,11 +31,11 @@ char keyR;
 char keyP;
 
 void setup() {
-  size(1000,1000,P3D);
-  de = (int)(min(width,height)*1);
+  size(1280,720,P3D);
+  de = (int)(max(width,height)*1);
   aw = (int)(4*de);
 
-  cam = new Camera(de*0.5,de*0.88,-de*1.2, -0.05,0,0);
+  cam = new Camera(de*0.5,de*0.5,-de*1.2, -0.05,0,0);
 
   textSize(de/10);
 

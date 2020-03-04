@@ -34,21 +34,15 @@ abstract class ObjectPool<T extends Entity> extends Entity {
     ar = new ArrayList<T>();
   }
 
- 	// void set(Node node, PVector p) {
-	// 	node.p.reset(p.x,p.y,p.z);
-	// 	node.finished = false;
-	// 	node.draw = true;
-	// 	node.pv.reset(random(-vs,vs),random(-vs,vs),random(-vs, vs));
-	// 	node.w = w * de;
-	// }
+ 	// void set(Obj obj, [args]);
 
-  // void add() {
+  // void add(Obj obj, [args]) {
   //   if (arm == ar.size()) {
   //     ar.add(new Mob(p));
   //   } else {
   //     Mob mob = (Mob)ar.get(arm);
-  //     // Reset mob
   //   }
+  //   reset mob
   //   arm ++;
   // }
 

@@ -1,5 +1,5 @@
 Point rainVel = new Point(1,12,1);
-float rainAmp = 300;
+float rainAmp = 200;
 int cloudBoudaryLifeSpan = 300;
 float cloudRepelAmp = 0.01;
 
@@ -10,6 +10,7 @@ class StormClouds extends Entity {
 	RainPool rain = new RainPool();
 	int currVGraph = 0;
 	boolean spawnClouds = true;
+	boolean spawnRain = true;
 
 	StormClouds(PVector p, float wx, float wy, float wz) {
 		this.ar = new ArrayList<Cloud>();
@@ -40,7 +41,7 @@ class StormClouds extends Entity {
 		for (int i = 0 ; i < ar.size() ; i ++) {
 			Cloud mob = ar.get(i);
 			if (mob.draw) {
-				if ((frameCount + mob.tick) % (int)(rainAmp/(avg+1)) < 2) {
+				if (spawnRain && (frameCount + mob.tick) % (int)(rainAmp/(avg+1)) < 2) {
 					rain.add(mob.p.p.x+random(-mob.w.p.x,mob.w.p.x), mob.p.p.y+random(-mob.w.p.y,mob.w.p.y), 
 						mob.p.p.z+random(-mob.w.p.z,mob.w.p.z),  mob.rainV.p.x, mob.rainV.p.y + avg, mob.rainV.p.z);
 				}

@@ -3,12 +3,14 @@ class Sun extends Entity {
 	SpringValue w;
 	IColor fillStyle;
 	SunBeam[] ar = new SunBeam[64];
+	boolean beam = false;
+	int beamTick = 1000;
 
 	Sun(PVector p, float w) {
 		sphereDetail(12);
 		this.p = new Point(p);
 		this.w = new SpringValue(w, 0.2,10);
-		this.fillStyle = new IColor(255,255,125,255);
+		this.fillStyle = new IColor(255,255,200,255);
 		for (int i = 0 ; i < ar.length ; i ++) {
 			ar[i] = new SunBeam();
 		}
@@ -20,6 +22,10 @@ class Sun extends Entity {
 		fillStyle.update();
 		for (SunBeam beam : ar) {
 			if (beam.draw) beam.update();
+		}
+		if (beam && frameCount % beamTick == 0) {
+			addBeam(random(-PI,PI),0,0.35, 200+(noise(frameCount/10)-0.5)*50,150+(noise(frameCount/10)-0.5)*50,75+(noise(frameCount/10)-0.5)*50,
+			noise(frameCount/100)*5,noise(frameCount/100+10)*5,noise(frameCount/100+100)*5);
 		}
 	}
 
@@ -67,10 +73,11 @@ class Sun extends Entity {
 		IColor fillStyle = new IColor();
 		int lifeSpan;
 		SpringValue ang = new SpringValue();
+		float av = random(-0.01,0.01);
 		SunBeam() {
 			draw = false;
 			float angle = 0.03;
-			float amp = 2;
+			float amp = 1.5;
 			float length = de*0.2;
 			float x = cos(-angle)*length;
 			float y = sin(-angle)*length;
@@ -92,6 +99,7 @@ class Sun extends Entity {
 				ar2[i].update();
 			}
 			fillStyle.update();
+			ang.X += av;
 			ang.update();
 			if (lifeSpan > 0) {
 				lifeSpan --;
